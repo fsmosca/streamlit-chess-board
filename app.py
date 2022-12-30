@@ -91,6 +91,7 @@ function updateStatus () {
 }
 
 var config = {
+  pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
   draggable: true,
   position: 'start',
   onDragStart: onDragStart,
