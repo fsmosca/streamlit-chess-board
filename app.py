@@ -53,7 +53,7 @@ if __name__ == '__main__':
         # Get the info from current board after the user made the move.
         # The data will return the move, fen and the pgn.
         # The move contains the from sq, to square, and others.
-        data = bridge("my-bridge", default=None)
+        data = bridge("my-bridge")
 
         if data is not None:
             if st.session_state.oldfen != st.session_state.curfen:
