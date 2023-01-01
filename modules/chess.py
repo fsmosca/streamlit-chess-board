@@ -88,7 +88,6 @@ class Chess:
             moveColor = 'Black'
           }
 
-          // checkmate?
           if (game.in_checkmate()) {
             status = 'Game over, ' + moveColor + ' is in checkmate.'
           }
