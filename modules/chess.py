@@ -69,7 +69,7 @@ class Chess:
           if (move === null) return 'snapback'
 
           updateStatus()
-          window.parent.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
+          // window.parent.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
         }
         """
 
