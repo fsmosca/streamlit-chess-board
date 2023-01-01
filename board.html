@@ -5,5 +5,10 @@
 <div id="board" style="width: 300px"></div>
 
 <script>
-    var board = ChessBoard('board', 'start');
+    var config = {
+      pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
+      position: 'start'
+    }
+    var board = Chessboard('board', config)
+    // var board = ChessBoard('board', 'start');
 </script>
