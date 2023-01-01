@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from st_bridge import bridge
-from modules.chess import Chess
+from modules.chess import Chess, chessboard
 from modules.utility import EPDS, set_page
 from modules.states import init_states
 
@@ -16,7 +16,7 @@ def cb_next():
 
 if __name__ == '__main__':
 
-    tabs = st.tabs(['Puzzle', 'Settings'])
+    tabs = st.tabs(['Puzzle', 'Settings', 'Play'])
 
     with tabs[1]:
         cols = st.columns([1, 3])
@@ -85,3 +85,7 @@ if __name__ == '__main__':
                     # pgn:  
                     # <strong>{data["pgn"]}</strong>
                     # ''', unsafe_allow_html=True)
+
+
+    with tabs[2]:
+        components.html(chessboard, height=400)
