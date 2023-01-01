@@ -1,107 +1,87 @@
+import streamlit as st
 import streamlit.components.v1 as components
+from st_bridge import bridge
+from modules.chess import Chess
+from modules.utility import EPDS, set_page
+from modules.states import init_states
 
 
-chess = """
-<link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+set_page(title='Chess', page_icon="♟️")
+init_states()
 
-<div id="myBoard" style="width: 400px"></div>
-<label>Status:</label>
-<div id="status"></div>
-<label>FEN:</label>
-<div id="fen"></div>
-<label>PGN:</label>
-<div id="pgn"></div>
 
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js" integrity="sha384-s3XgLpvmHyscVpijnseAmye819Ee3yaGa8NxstkJVyA6nuDFjt59u1QvuEl/mecz" crossorigin="anonymous"></script>
+def cb_next():
+    st.session_state.next += 1
 
-<script>
-// NOTE: this example uses the chess.js library:
-// https://github.com/jhlywa/chess.js
 
-var board = null
-var game = new Chess()
-var $status = $('#status')
-var $fen = $('#fen')
-var $pgn = $('#pgn')
+if __name__ == '__main__':
 
-function onDragStart (source, piece, position, orientation) {
-  // do not pick up pieces if the game is over
-  if (game.game_over()) return false
+    tabs = st.tabs(['Puzzle', 'Settings'])
 
-  // only pick up pieces for the side to move
-  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-    return false
-  }
-}
+    with tabs[1]:
+        cols = st.columns([1, 3])
+        with cols[0]:
+            # Use dynamic board width for mobile phone.
+            st.number_input(
+                'Board Width',
+                min_value=200,
+                max_value=500,
+                value=400,
+                step=50,
+                key='board_width'
+            )
 
-function onDrop (source, target) {
-  // see if the move is legal
-  var move = game.move({
-    from: source,
-    to: target,
-    promotion: 'q' // NOTE: always promote to a queen for example simplicity
-  })
+    with tabs[0]:
+        cols = st.columns([1, 1])
 
-  // illegal move
-  if (move === null) return 'snapback'
+        with cols[0]:
+            # Show chess board based from fen.
+            if st.session_state.next >= len(EPDS):
+                st.session_state.next = 0
 
-  updateStatus()
-}
+            epd = EPDS[st.session_state.next]
+            fen = f"{' '.join(epd.split()[0:4])} 0 1"
+            st.session_state.curfen = fen
+            bm = epd.split('bm ')[1][0:-1]
+            puzzle = Chess(st.session_state.board_width, fen)
+            components.html(
+                puzzle.puzzle_board(),
+                height=st.session_state.board_width + 75,
+                scrolling=False
+            )
 
-// update the board position after the piece snap
-// for castling, en passant, pawn promotion
-function onSnapEnd () {
-  board.position(game.fen())
-}
+        # Get the info from current board after the user made the move.
+        # The data will return the move, fen and the pgn.
+        # The move contains the from sq, to square, and others.
+        data = bridge("my-bridge", default=None)
 
-function updateStatus () {
-  var status = ''
+        if data is not None:
+            if st.session_state.oldfen != st.session_state.curfen:
+                data = None
+        st.session_state.oldfen = st.session_state.curfen
 
-  var moveColor = 'White'
-  if (game.turn() === 'b') {
-    moveColor = 'Black'
-  }
+        with cols[1]:
+            st.button('Next Position', on_click=cb_next)
+            if data is not None:
+                user_move = data['move']['san']
+                if bm == user_move:
+                    st.success(f'Congratulations, your move {user_move}'
+                               ' is correct!')
+                else:
+                    st.error(f'Sorry, your move {user_move} is incorrect!')
 
-  // checkmate?
-  if (game.in_checkmate()) {
-    status = 'Game over, ' + moveColor + ' is in checkmate.'
-  }
+                with st.expander('Board and user move info'):
+                    st.markdown(f'''
+                    move:  
+                    **{data["move"]}**
+                    ''')
 
-  // draw?
-  else if (game.in_draw()) {
-    status = 'Game over, drawn position'
-  }
-
-  // game still on
-  else {
-    status = moveColor + ' to move'
-
-    // check?
-    if (game.in_check()) {
-      status += ', ' + moveColor + ' is in check'
-    }
-  }
-
-  $status.html(status)
-  $fen.html(game.fen())
-  $pgn.html(game.pgn())
-}
-
-var config = {
-  pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
-  draggable: true,
-  position: 'start',
-  onDragStart: onDragStart,
-  onDrop: onDrop,
-  onSnapEnd: onSnapEnd
-}
-board = Chessboard('myBoard', config)
-
-updateStatus()
-</script>
-"""
-
-components.html(chess, height=600)
+                    st.markdown(f'''
+                    fen:  
+                    **{data["fen"]}**
+                    ''')
+                    
+                    st.markdown(f'''
+                    pgn:  
+                    <strong>{data["pgn"]}</strong>
+                    ''', unsafe_allow_html=True)
