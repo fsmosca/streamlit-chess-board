@@ -45,7 +45,7 @@ class Chess:
         var $pgn = $('#pgn')
         """
 
-        game_over = f"""
+        game_over_ = """
         // do not pick up pieces if the game is over
         if (game.game_over()) return false
         if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -53,7 +53,7 @@ class Chess:
         """
 
         script2 = f"""
-        function onDragStart (source, piece, position, orientation) {{{game_over}}}
+        function onDragStart (source, piece, position, orientation) {{{game_over_}}}
         """
 
         script3 = """
@@ -69,7 +69,7 @@ class Chess:
           if (move === null) return 'snapback'
 
           updateStatus()
-          // window.parent.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
+          window.parent.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
         }
         """
 
