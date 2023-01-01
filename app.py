@@ -76,12 +76,12 @@ if __name__ == '__main__':
                     **{data["move"]}**
                     ''')
 
-                    st.markdown(f'''
-                    fen:  
-                    **{data["fen"]}**
-                    ''')
-                    
-                    st.markdown(f'''
-                    pgn:  
-                    <strong>{data["pgn"]}</strong>
-                    ''', unsafe_allow_html=True)
+                    # st.markdown(f'''
+                    # fen:  
+                    # **{data["fen"]}**
+                    # ''')
+
+                    # st.markdown(f'''
+                    # pgn:  
+                    # <strong>{data["pgn"]}</strong>
+                    # ''', unsafe_allow_html=True)
