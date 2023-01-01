@@ -1,5 +1,7 @@
 # streamlit-chess-board
 
+An app is hosted in streamlit cloud at  https://chess-board.streamlit.app/
+
 ![image](https://user-images.githubusercontent.com/22366935/210097759-19fdea5f-d716-42e4-821a-fcde7ebb3836.png)
 
 ## Setup
