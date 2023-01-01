@@ -68,8 +68,8 @@ class Chess:
           // illegal move
           if (move === null) return 'snapback'
 
-          updateStatus()
           window.parent.stBridges.send("my-bridge", {'move': move});
+          updateStatus()
         }
         """
 
@@ -122,7 +122,7 @@ class Chess:
 
         script5 = f"""
         var config = {{{config_}}}
-        var board = Chessboard('myBoard', config)
+        board = Chessboard('myBoard', config)
 
         updateStatus()
         """
