@@ -112,7 +112,7 @@ class Chess:
         """
 
         config_ = f"""
-        pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
+        pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{{piece}}.png',
         position: '{self.fen}',
         orientation: '{sidetomove}',
         draggable: true,
