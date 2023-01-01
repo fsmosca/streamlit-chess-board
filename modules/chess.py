@@ -190,6 +190,7 @@ function onDrop (source, target) {
   if (move === null) return 'snapback'
 
   updateStatus()
+  parent.stBridges.send("my-bridge", {'move': move});
 }
 
 // update the board position after the piece snap
