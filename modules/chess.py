@@ -68,7 +68,7 @@ class Chess:
           // illegal move
           if (move === null) return 'snapback'
 
-          window.parent.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
+          window.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
           updateStatus()
         }
         """
