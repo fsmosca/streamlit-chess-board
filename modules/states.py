@@ -14,6 +14,3 @@ def init_states():
 
     if 'oldfen' not in st.session_state:
         st.session_state.oldfen = None
-
-    if 'board_width' not in st.session_state:
-        st.session_state.board_width = 400
