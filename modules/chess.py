@@ -68,7 +68,14 @@ class Chess:
           // illegal move
           if (move === null) return 'snapback'
 
-          window.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
+          if (window.parent) {
+            console.log("in iframe")
+            window.parent.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
+          }
+          else {
+            console.log("not in iframe")
+            window.stBridges.send("my-bridge", {'move': move, 'fen': game.fen(), 'pgn': game.pgn()});
+          }
           updateStatus()
         }
         """
