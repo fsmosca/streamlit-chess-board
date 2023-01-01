@@ -17,4 +17,5 @@ This will only work when run locally with `streamlit run app.py`. But it will no
 
 * git clone https://github.com/fsmosca/streamlit-chess-board.git
 * cd streamlit-chess-board
+* pip install -r requirements.txt
 * streamlit run app.py
